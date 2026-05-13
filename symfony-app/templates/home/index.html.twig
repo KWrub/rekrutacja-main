@@ -149,10 +149,128 @@
             font-size: 2em;
             margin-bottom: 10px;
         }
+
+        .filter-panel {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .filter-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .filter-field input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.14);
+            color: white;
+        }
+
+        .filter-field input::placeholder {
+            color: rgba(255,255,255,0.75);
+        }
+
+        .filter-actions {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+
+        .filter-actions button,
+        .filter-actions a {
+            border: none;
+            border-radius: 10px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            color: white;
+            background: rgba(255,255,255,0.18);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .filter-actions button:hover,
+        .filter-actions a:hover {
+            background: rgba(255,255,255,0.28);
+            transform: translateY(-1px);
+        }
     </style>
 {% endblock %}
 
 {% block body %}
+    <div class="filter-panel">
+        {{ form_start(form, {
+            method: 'GET',
+            attr: { class: 'filter-form' }
+        }) }}
+
+            <label class="filter-field">
+                <span>Location</span>
+                {{ form_widget(form.location, {
+                    attr: { placeholder: 'Location' }
+                }) }}
+                {{ form_errors(form.location) }}
+            </label>
+
+            <label class="filter-field">
+                <span>Camera</span>
+                {{ form_widget(form.camera, {
+                    attr: { placeholder: 'Camera' }
+                }) }}
+                {{ form_errors(form.camera) }}
+            </label>
+
+            <label class="filter-field">
+                <span>Description</span>
+                {{ form_widget(form.description, {
+                    attr: { placeholder: 'Description' }
+                }) }}
+                {{ form_errors(form.description) }}
+            </label>
+
+            <label class="filter-field">
+                <span>Taken from</span>
+                {{ form_widget(form.takenFrom) }}
+                {{ form_errors(form.takenFrom) }}
+            </label>
+
+            <label class="filter-field">
+                <span>Taken to</span>
+                {{ form_widget(form.takenTo) }}
+                {{ form_errors(form.takenTo) }}
+            </label>
+
+            <label class="filter-field">
+                <span>Username</span>
+                {{ form_widget(form.username, {
+                    attr: { placeholder: 'Username' }
+                }) }}
+                {{ form_errors(form.username) }}
+            </label>
+
+            <div class="filter-actions">
+                <button type="submit">Apply filters</button>
+                <a href="{{ path('home') }}">Clear</a>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+
     {% if photos|length > 0 %}
         <div class="photo-grid">
             {% for photo in photos %}

@@ -4,47 +4,47 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
-use App\Repository\LikeRepository;
-use App\Repository\PhotoRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use App\Dto\PhotoFilterDto;
+use App\Form\FilterFormType;
+use App\Service\LikeService;
+use App\Service\PhotoService;
+use App\Service\SessionService;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="home")
-     * @return JsonResponse
-     */
-    public function index(Request $request, EntityManagerInterface $em, ManagerRegistry $managerRegistry): Response
-    {
-        $photoRepository = new PhotoRepository($managerRegistry);
-        $likeRepository = new LikeRepository($managerRegistry);
+    #[Route('/', name: 'home')]
+    public function index(
+        Request $request,
+        PhotoService $photoService,
+        LikeService $likeService,
+        UserService $userService,
+        SessionService $sessionService
+    ): Response {
+        $dto = new PhotoFilterDto();
 
-        $photos = $photoRepository->findAllWithUsers();
+        $form = $this->createForm(FilterFormType::class, $dto);
+        $form->handleRequest($request);
 
-        $session = $request->getSession();
-        $userId = $session->get('user_id');
-        $currentUser = null;
-        $userLikes = [];
-
-        if ($userId) {
-            $currentUser = $em->getRepository(User::class)->find($userId);
-
-            if ($currentUser) {
-                foreach ($photos as $photo) {
-                    $likeRepository->setUser($currentUser);
-                    $userLikes[$photo->getId()] = $likeRepository->hasUserLikedPhoto($photo);
-                }
-            }
+        if ($form->isSubmitted() && !$form->isValid()) {
+            return $this->render('home/index.html.twig', [
+                'form' => $form->createView(),
+                'photos' => [],
+                'currentUser' => null,
+                'userLikes' => [],
+            ]);
         }
 
+        $photos = $photoService->getPhotos($dto);
+        $currentUser = $userService->getCurrentUser($sessionService);
+        $userLikes = $likeService->getUserLikes($currentUser, $photos);
+
         return $this->render('home/index.html.twig', [
+            'form' => $form->createView(),
             'photos' => $photos,
             'currentUser' => $currentUser,
             'userLikes' => $userLikes,
