@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Entity\Photo;
 use App\Entity\User;
-use App\Repository\LikeRepositoryInterface;
+use App\Repository\Interfaces\LikeRepositoryInterface;
 
 class LikeService
 {
