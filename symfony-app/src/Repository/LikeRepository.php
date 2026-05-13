@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\Photo;
 use App\Entity\User;
 use App\Entity\Like;
+use App\Repository\Interfaces\LikeRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
