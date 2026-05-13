@@ -33,6 +33,10 @@ class Like
     {
         $this->createdAt = new \DateTime();
     }
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getUser(): User
     {

@@ -35,8 +35,8 @@ class Photo
     private int $likeCounter = 0;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'photos')]
-    #[ORM\JoinColumn(nullable: false)]
-    private User $user;
+    #[ORM\JoinColumn(nullable: true)] // Allow null to prevent issues when deleting users
+    private ?User $user = null;
 
     public function getId(): ?int
     {
@@ -98,7 +98,7 @@ class Photo
         return $this;
     }
 
-    public function getUser(): User
+    public function getUser(): ?User
     {
         return $this->user;
     }
