@@ -38,6 +38,9 @@ class User
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Photo::class, cascade: ['persist', 'remove'])]
     private Collection $photos;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $phoenix_app_token = null;
+
     public function __construct()
     {
         $this->photos = new ArrayCollection();
@@ -111,6 +114,17 @@ class User
     public function setBio(?string $bio): self
     {
         $this->bio = $bio;
+        return $this;
+    }
+
+    public function getPhoenixAppToken(): ?string
+    {
+        return $this->phoenix_app_token;
+    }
+
+    public function setPhoenixAppToken(?string $phoenix_app_token): self
+    {
+        $this->phoenix_app_token = $phoenix_app_token;
         return $this;
     }
 
