@@ -2,8 +2,6 @@ doctrine:
     dbal:
         # Use sqlite for faster tests (optional - keep postgres if preferred)
         driver: 'pdo_pgsql'
-        url: '%env(resolve:DATABASE_URL)%'
-        # Add this to ensure we use test database
-        dbname_suffix: '_test'
+        url: '%env(DATABASE_URL)%'
     orm:
         auto_generate_proxy_classes: true
