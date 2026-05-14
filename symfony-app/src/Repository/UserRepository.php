@@ -23,4 +23,14 @@ class UserRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function updateUserProfile(User $user, string $phoenixAppToken): User
+    {
+        $user->setPhoenixAppToken($phoenixAppToken);
+        
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
+
+        return $user;
+    }
 }

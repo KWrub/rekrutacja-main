@@ -7,13 +7,11 @@ namespace App\Service;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use App\Service\SessionService;
-use Doctrine\ORM\EntityManagerInterface;
 
 class UserService
 {
     public function __construct(
-        private UserRepository $userRepository,
-        private EntityManagerInterface $entityManager
+        private UserRepository $userRepository
     ) {}
 
     public function getUserById(int $userId): ?User
@@ -39,11 +37,6 @@ class UserService
 
     public function updateUserProfile(User $user, string $phoenixAppToken): User
     {
-        $user->setPhoenixAppToken($phoenixAppToken);
-        
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        return $user;
+        return $this->userRepository->updateUserProfile($user, $phoenixAppToken);
     }
 }

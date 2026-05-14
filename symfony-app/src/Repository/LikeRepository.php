@@ -44,4 +44,30 @@ class LikeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function likePhoto(User $user, Photo $photo): void
+    {
+        $like = new Like();
+        $like->setUser($user);
+        $like->setPhoto($photo);
+
+        $this->getEntityManager()->persist($like);
+        
+        $photo->setLikeCounter($photo->getLikeCounter() + 1);
+        $this->getEntityManager()->persist($photo);
+        $this->getEntityManager()->flush();
+    }
+
+    public function unlikePhoto(User $user, Photo $photo): void
+    {
+        $like = $this->findLike($user, $photo);
+
+        if ($like) {
+            $this->getEntityManager()->remove($like);
+            
+            $photo->setLikeCounter($photo->getLikeCounter() - 1);
+            $this->getEntityManager()->persist($photo);
+            $this->getEntityManager()->flush();
+        }
+    }
 }

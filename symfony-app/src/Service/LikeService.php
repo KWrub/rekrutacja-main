@@ -8,27 +8,17 @@ use App\Entity\Like;
 use App\Entity\Photo;
 use App\Entity\User;
 use App\Repository\LikeRepository;
-use Doctrine\ORM\EntityManagerInterface;
 
 class LikeService
 {
     public function __construct(
-        private LikeRepository $likeRepository,
-        private EntityManagerInterface $entityManager
+        private LikeRepository $likeRepository
     ) {}
 
     public function likePhoto(User $user, Photo $photo): void
     {
         try {
-            $like = new Like();
-            $like->setUser($user);
-            $like->setPhoto($photo);
-
-            $this->entityManager->persist($like);
-            
-            $photo->setLikeCounter($photo->getLikeCounter() + 1);
-            $this->entityManager->persist($photo);
-            $this->entityManager->flush();
+            $this->likeRepository->likePhoto($user, $photo);
         } catch (\Throwable $e) {
             throw new \Exception('Something went wrong while liking the photo');
         }
@@ -36,15 +26,7 @@ class LikeService
 
     public function unlikePhoto(User $user, Photo $photo): void
     {
-        $like = $this->likeRepository->findLike($user, $photo);
-
-        if ($like) {
-            $this->entityManager->remove($like);
-            
-            $photo->setLikeCounter($photo->getLikeCounter() - 1);
-            $this->entityManager->persist($photo);
-            $this->entityManager->flush();
-        }
+        $this->likeRepository->unlikePhoto($user, $photo);
     }
 
     public function hasUserLikedPhoto(User $user, Photo $photo): bool
