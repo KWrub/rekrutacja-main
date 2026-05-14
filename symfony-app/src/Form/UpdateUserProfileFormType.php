@@ -29,6 +29,7 @@ class UpdateUserProfileFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => UpdateUserProfileDto::class,
+            'csrf_protection' => false,
         ]);
     }
 }
