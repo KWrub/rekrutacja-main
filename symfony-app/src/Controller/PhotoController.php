@@ -29,7 +29,8 @@ class PhotoController extends AbstractController
         $photo = $photoService->getPhotoById($id);
 
         if (!$photo) {
-            throw $this->createNotFoundException('Photo not found');
+            $this->addFlash('error', 'Liked photo does not exist.');
+            return $redirectBackService->redirect($request);
         }
 
         if ($likeService->toggleLike($user, $photo)) {
