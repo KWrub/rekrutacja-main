@@ -76,10 +76,8 @@ class ProfileController extends AbstractController
         try {
             $importedCount = $photoImportService->importPhotosFromPhoenix($user);
             $this->addFlash('success', sprintf('Successfully imported %d photos from Phoenix API.', $importedCount));
-        } catch (\InvalidArgumentException $e) {
-            $this->addFlash('error', $e->getMessage());
         } catch (\Exception $e) {
-            $this->addFlash('error', 'Failed to import photos: ' . $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
         }
 
         return $this->redirectToRoute('profile');
