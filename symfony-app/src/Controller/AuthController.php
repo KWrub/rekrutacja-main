@@ -33,7 +33,8 @@ class AuthController extends AbstractController
         $userData = $authService->authenticate($username, $token);
 
         if (!$userData) {
-            return new Response('Invalid credentials', 401);
+            $this->addFlash('error', 'Invalid credentials');
+            return $this->redirectToRoute('home');
         }
 
         $sessionService->setUser($userData);
