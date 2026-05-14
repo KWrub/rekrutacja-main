@@ -1,7 +1,7 @@
 defmodule PhoenixApiWeb.Plugs.Authenticate do
   import Plug.Conn
   import Phoenix.Controller
-  alias PhoenixApi.Repo
+  alias PhoenixApi.Accounts
   alias PhoenixApi.Accounts.User
 
   def init(opts), do: opts
@@ -9,7 +9,7 @@ defmodule PhoenixApiWeb.Plugs.Authenticate do
   def call(conn, _opts) do
     case get_req_header(conn, "access-token") do
       [token] ->
-        case Repo.get_by(User, api_token: token) do
+        case Accounts.get_by_api_token(token) do
           %User{} = user ->
             assign(conn, :current_user, user)
 
@@ -30,4 +30,3 @@ defmodule PhoenixApiWeb.Plugs.Authenticate do
     end
   end
 end
-
