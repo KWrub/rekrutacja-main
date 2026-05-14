@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Dto\UpdateUserProfileDto;
 use App\Form\UpdateUserProfileFormType;
+use App\Service\PhotoImportService;
 use App\Service\SessionService;
 use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -58,6 +59,28 @@ class ProfileController extends AbstractController
         $userService->updateUserProfile($user, $dto->phoenixAppToken);
 
         $this->addFlash('success', 'Your profile has been updated successfully.');
+
+        return $this->redirectToRoute('profile');
+    }
+
+    #[Route('/profile/import-photos', name: 'profile_import_photos', methods: ['POST'])]
+    public function importPhotos(UserService $userService, PhotoImportService $photoImportService, SessionService $sessionService): Response
+    {
+        $user = $userService->getCurrentUser($sessionService);
+
+        if (!$user) {
+            $sessionService->clear();
+            return $this->redirectToRoute('home');
+        }
+
+        try {
+            $importedCount = $photoImportService->importPhotosFromPhoenix($user);
+            $this->addFlash('success', sprintf('Successfully imported %d photos from Phoenix API.', $importedCount));
+        } catch (\InvalidArgumentException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Failed to import photos: ' . $e->getMessage());
+        }
 
         return $this->redirectToRoute('profile');
     }

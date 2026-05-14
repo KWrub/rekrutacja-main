@@ -145,6 +145,26 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
+        .import-photos-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+            font-size: 0.95em;
+        }
+
+        .import-photos-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+        }
         
         .profile-field-form {
             background: #f8f9fa;
@@ -279,6 +299,11 @@
             <div class="stat-item">
                 <div class="stat-number">{{ user.photos|length }}</div>
                 <div class="stat-label">Photos</div>
+                {% if user.phoenixAppToken %}
+                    <form method="POST" action="{{ path('profile_import_photos') }}" style="margin-top: 15px;">
+                        <button type="submit" class="import-photos-btn">Import External Photos</button>
+                    </form>
+                {% endif %}
             </div>
         </div>
         

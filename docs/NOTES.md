@@ -18,6 +18,12 @@ symphony app:
     dodano migracje
     dodano końcówke odpowiedzialna za przypisywanie tokenu
     dodano formularz w profilu (style zvibe codowane, bezpieczniej byłoby nie wyświetlać tego tokenu i na przykład zwracać tylko jakaś flagę że jest ustawiony i umożliwić wpisywanie go tylko od nowa za każdym razem)
+    dodano końcówkę odpowiedzialną za importowanie zdjęć
+    dodano serwisy odpowiedzialne za komunikacje oraz procesowanie odpowiedzi z phoenix api
+
+phoenix api:
+    zmodyfikowano kontroler
+    dodano maper w osobnym pliku
 
 zadanie 3
 filtry:
