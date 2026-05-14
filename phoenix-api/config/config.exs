@@ -18,6 +18,12 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :hammer,
+  backend: {Hammer.Backend.ETS,
+    expiry_ms: 60 * 60 * 1_000,
+    cleanup_interval_ms: 60 * 1_000
+  }
+
 config :phoenix, :json_library, Jason
 
 import_config "#{config_env()}.exs"
